@@ -11,6 +11,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import MapPicker from 'react-google-map-picker'
+import { Row } from "react-bootstrap";
+const DefaultLocation = { lat: 6.899079665221141, lng: 79.92616863498765 };
+const DefaultZoom = 10;
+
 
 function Copyright(props) {
   return (
@@ -71,6 +76,31 @@ export default function SignUp() {
     );
     console.log(result);
   };
+
+  const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
+
+  const [location, setLocation] = useState(defaultLocation);
+  const [zoom, setZoom] = useState(DefaultZoom);
+
+  function handleChangeLocation(lat, lng) {
+    setLocation({ lat: lat, lng: lng });
+    setLatitude({lat});
+    setLongitude({lng});
+
+  }
+
+  function handleChangeZoom(newZoom) {
+    setZoom(newZoom);
+  }
+
+  function handleResetLocation() {
+    setDefaultLocation({ ...DefaultLocation });
+    setZoom(DefaultZoom);
+
+  }
+
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -185,33 +215,27 @@ export default function SignUp() {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="latitude"
-                  label="Latitude (User Location)"
-                  type="string"
-                  id="latitude"
-                  autoComplete="latitude"
-                  onChange={(e) => {
-                    setLatitude(e.target.value);
-                  }}
-                />
-              </Grid>
+              <div>
+                <>
+                  <MapPicker defaultLocation={defaultLocation}
+                    zoom={zoom}
+                    mapTypeId="roadmap"
+                    style={{ height: '700px' }}
+                    onChangeLocation={handleChangeLocation}
+                    onChangeZoom={handleChangeZoom}
+                    apiKey='AIzaSyD07E1VvpsN_0FvsmKAj4nK9GnLq-9jtj8' />
+                </>
+              </div>
+              <div>
 
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="longitude"
-                  label="Longitude  (User Location)"
-                  type="string"
-                  id="longitude"
-                  autoComplete="longitude"
-                  onChange={(e) => {
-                    setLongitude(e.target.value);
-                  }}
-                />
+                  <Row>
+                  <label>Latitute:</label><input type='text' value={location.lat} disabled />
+                  <label>Longitute:</label><input type='text' value={location.lng} disabled />
+                  <button onClick={handleResetLocation}>Reset </button>
+                  
+                  </Row>
+                  </div>
+              
               </Grid>
 
               <Grid item xs={12}>
